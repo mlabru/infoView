@@ -287,6 +287,17 @@ def _screen_size():
     return linfo.current_w, linfo.current_h
 
 # ---------------------------------------------------------------------------------------------
+def _display_flags():
+    """
+    window flags: fullscreen on the kiosk (asks the compositor for the whole output, above the
+    desktop panel); a borderless window when IVW_SCREEN / screen forces a size (simulating the
+    Pi touchscreen on a desktop: fullscreen there would change or stretch the desktop's mode)
+
+    :returns (int): flags for pg.display.set_mode
+    """
+    return pg.NOFRAME if df.DT_SCREEN else pg.FULLSCREEN
+
+# ---------------------------------------------------------------------------------------------
 def main():
     """
     drive application
@@ -303,7 +314,7 @@ def main():
 
     # size of the window
     li_w, li_h = _screen_size()
-    lsrf_screen = pg.display.set_mode((li_w, li_h), pg.NOFRAME)
+    lsrf_screen = pg.display.set_mode((li_w, li_h), _display_flags())
 
     # caption
     pg.display.set_caption("infoView 1.0")

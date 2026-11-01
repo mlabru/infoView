@@ -12,8 +12,13 @@ import subprocess
 import sys
 import unittest
 
+# pygame
+import pygame as pg
+
 # infoView
+import infoview.app as app
 import infoview.core.config as cfg
+import infoview.core.settings as df
 
 # ---------------------------------------------------------------------------------------------
 def _run_scenario(fs_layout: str) -> dict:
@@ -66,3 +71,22 @@ class TestApp(unittest.TestCase):
         self.assertGreaterEqual(ldct["steps"]["description"]["height"], 96 + 60)
 
 # < the end >----------------------------------------------------------------------------------
+
+# < TestDisplayFlags >-------------------------------------------------------------------------
+
+class TestDisplayFlags(unittest.TestCase):
+    """fullscreen on the kiosk, a borderless window when the screen size is forced"""
+
+    def setUp(self):
+        self._t_screen = df.DT_SCREEN
+
+    def tearDown(self):
+        df.DT_SCREEN = self._t_screen
+
+    def test_kiosk_fullscreen(self):
+        df.DT_SCREEN = None
+        self.assertEqual(app._display_flags(), pg.FULLSCREEN)
+
+    def test_forced_size_window(self):
+        df.DT_SCREEN = (800, 480)
+        self.assertEqual(app._display_flags(), pg.NOFRAME)
