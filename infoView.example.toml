@@ -1,0 +1,67 @@
+# infoView — configuração do usuário (exemplo)
+#
+# Copie para infoView.toml (na raiz do projeto; fica fora do git) e altere só o que precisar:
+#
+#     cp infoView.example.toml infoView.toml
+#
+# Tudo é opcional: o que não estiver no arquivo usa o padrão do código. Precedência (maior
+# primeiro): variável de ambiente IVW_* (só [general]) > este arquivo > padrão do código.
+# Chaves desconhecidas, valores de tipo errado e valores fora dos limites (indicados abaixo, ex.
+# "mín. 5") são registrados no log (./infoView.sh logs) e ignorados: vale o padrão. Outro caminho: IVW_CONFIG=/caminho/arquivo.toml ./infoView.sh restart
+#
+# Os valores abaixo são os padrões.
+
+[general]
+layout = "sidebar"          # "sidebar" (meteorologia em coluna) | "strip" (faixa sob o relógio)
+language = "pt_BR"          # "pt_BR" | "en"
+theme = "color"             # "color" | "mono"
+screen = ""                 # "" = tela inteira | "800x480" (simula a tela do Pi num desktop; mín. 320x240)
+clock_check = true          # espera o NTP acertar o relógio ("acertando o relógio…"); false num
+                            # Pi com relógio de hardware (RTC) e sem rede
+
+[weather]
+reloadInterval = 900        # busca a cada (s), mín. 300; a Open-Meteo atualiza a cada 15 min
+staleAfter = 2700           # dado mais velho que isso (s, mín. 60) aparece como "velho"
+
+[weather.location]
+# TROQUE: nome da cidade + país (ISO 3166-1, ex. "BR"), procurado no geocoding da Open-Meteo,
+# ou latitude/longitude (então o nome só é exibido)
+name = "São Paulo"
+country_code = "BR"
+# latitude = -23.55        # -90 a 90
+# longitude = -46.63       # -180 a 180
+
+[weather.units]
+temperature = "celsius"     # "celsius" | "fahrenheit"
+wind = "kmh"                # "kmh" | "ms" | "mph" | "kn"
+precipitation = "mm"        # "mm" | "inch"
+
+[newsfeed]
+updateInterval = 10         # cada notícia fica na tela por (s), mín. 5
+reloadInterval = 120        # busca cada feed a cada (s), mín. 60; o <ttl> do feed pode aumentar
+maxNewsItems = 50           # máximo de notícias, as mais novas (0 = sem limite); 50 x 10 s = ~8 min por volta
+ignoreOldItems = true       # descarta notícias com mais de ignoreOlderThan segundos
+ignoreOlderThan = 604800    # 7 dias (s), mín. 60
+showDescription = false     # mostra a descrição sob o título já na rotação
+prohibitedWords = []        # descarta notícias cujo título contém alguma destas palavras (textos)
+removeStartTags = ""        # "title" | "description" | "both" | "": remove os prefixos startTags
+startTags = []
+removeEndTags = ""          # "title" | "description" | "both" | "": remove os sufixos endTags
+endTags = []
+scrollLength = 0            # passo (px, ≥ 0) dos botões ▼ / ▲ no artigo completo; 0 = uma página
+detailsTimeout = 120        # descrição / artigo sem toque por (s, ≥ 0): volta aos títulos; 0 = nunca
+logFeedWarnings = false     # registra no log itens sem título ou sem data
+
+# feeds: substitui a lista inteira. title aparece como a fonte da notícia; reloadInterval
+# (opcional, mín. 60) vale só para aquele feed
+[[newsfeed.feeds]]
+title = "New York Times"
+url = "https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml"
+
+[[newsfeed.feeds]]
+title = "UOL Mundo"
+url = "https://feeds.folha.uol.com.br/mundo/rss091.xml"
+
+[[newsfeed.feeds]]
+title = "UOL Ciência"
+url = "https://feeds.folha.uol.com.br/ciencia/rss091.xml"

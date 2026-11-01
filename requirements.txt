@@ -1,0 +1,11 @@
+# infoView — Python dependencies (Python >= 3.9)
+#
+# On the Raspberry Pi prefer the distro packages (python3-pygame, python3-feedparser) and run
+# "./infoView.sh setup": it creates .venv with --system-site-packages and only installs what's
+# missing. A pygame built without SDL_image / SDL_ttf can't load PNG / fonts: "pygame-ce" is a
+# drop-in alternative (pip install pygame-ce) — the setup script installs it in that case.
+
+pygame>=2.1
+feedparser>=6.0
+# TOML parser for the user config file (infoView.toml): built in (tomllib) from Python 3.11
+tomli>=2.0; python_version < "3.11"
